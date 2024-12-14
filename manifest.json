@@ -1,0 +1,15 @@
+{
+  "name": "Clean Chat for Twitch",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "Stashes away the badges and replaces them with subtle highlights for user roles on the side of each message, also offers some emote improvements.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["https://twitch.tv/*", "https://www.twitch.tv/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://twitch.tv/*", "https://www.twitch.tv/*"],
+      "css": ["style.css"],
+      "js": ["script.js"]
+    }
+  ]
+}
