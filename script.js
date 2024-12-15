@@ -34,6 +34,14 @@ function handleMutation(node) {
       handleChatMessage(message);
     });
   }
+
+  // Scan for any unprocessed messages.
+  let unprocessedMessages = document.querySelectorAll(".message:not([data-cleaned-up])");
+  unprocessedMessages.forEach(message => {
+    handleChatMessage(message);
+  });
+
+  checkFFZSettings();
 }
 
 /**
@@ -85,6 +93,13 @@ function enlargeEmotes(emotes) {
   for (let emote of emotes) {
     let actualWidth = emote.clientWidth;
     let actualHeight = emote.clientHeight;
+    if (!emote.complete || actualWidth == 0 || actualHeight == 0) {
+      console.log(emote, "Emote not loaded yet.");
+      setTimeout(() => {
+        enlargeEmotes([emote]);
+      }, 10);
+      continue;
+    }
     let srcset = emote.getAttribute("srcset");
     let sizes = setregex.exec(srcset);
     if (sizes === null) continue;
@@ -104,5 +119,31 @@ function enlargeEmotes(emotes) {
     emote.style.maxHeight = `${actualHeight * 2}px`;
     emote.style.lineHeight = `${actualHeight * 2}px`;
     emote.style.verticalAlign = "baseline";
+
+    emote.setAttribute("data-embiggened", "");
   }
 }
+
+function checkFFZSettings() {
+  if (!window.ffz) return setTimeout(checkFFZSettings, 1000);
+  if (!window.ffz.settings) return setTimeout(checkFFZSettings, 1000);
+  if (!window.ffz.settings.get) return setTimeout(checkFFZSettings, 1000);
+  let format = ffz.settings.get("chat.timestamp-format");
+
+  let size = 0;
+  if (format.length >= 1) size = 1;
+  if (format.length >= 6) size = 2;
+  if (format.length >= 8) size = 3;
+
+  let classes = [
+    "clean-no-timestamps",
+    "clean-small-timestamps",
+    "clean-medium-timestamps",
+    "clean-large-timestamps"
+  ];
+
+  document.body.classList.remove(...classes);
+  document.body.classList.add(classes[size]);
+}
+
+checkFFZSettings();
