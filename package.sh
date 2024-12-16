@@ -4,7 +4,7 @@
 cd "$(dirname "$0")"
 
 # Extract the version from manifest.json
-VERSION=$(grep -oP '"version":\s*"\K[0-9.]+' manifest.json)
+VERSION=$(grep -oP '"version":\s*"\K[0-9.]+' manifestv3.json)
 
 # Check if the version was found
 if [ -z "$VERSION" ]; then
@@ -16,9 +16,9 @@ fi
 ZIP_FILE="cleanchat_$VERSION"
 
 # Add icons and scripts to the zip file
-cp -y manifestv3.json manifest.json
+cp -f manifestv3.json manifest.json
 zip -r "$ZIP_FILE.v3.zip" icon*.png script.js style.css manifest.json
-cp -y manifestv2.json manifest.json
+cp -f manifestv2.json manifest.json
 zip -r "$ZIP_FILE.v2.zip" icon*.png script.js style.css manifest.json
 rm manifest.json
 
