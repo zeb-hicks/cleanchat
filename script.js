@@ -41,6 +41,8 @@ function handleMutation(node) {
     handleChatMessage(message);
   });
 
+  scrollIfNeeded();
+
   checkFFZSettings();
 }
 
@@ -144,6 +146,14 @@ function checkFFZSettings() {
 
   document.body.classList.remove(...classes);
   document.body.classList.add(classes[size]);
+}
+
+function scrollIfNeeded() {
+  let chat = document.querySelector(".chat-scrollable-area__message-container");
+  let paused = chat.classList.contains("chat-scrollable-area__message-container--paused");
+  if (paused) return;
+
+  chat.lastChild.scrollIntoViewIfNeeded();
 }
 
 checkFFZSettings();
